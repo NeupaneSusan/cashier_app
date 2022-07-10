@@ -817,7 +817,6 @@ Future<bool> checkPrint(context) async {
     printer.disconnect();
     return true;
   } else {
-    printer.disconnect();
     return false;
   }
 }
@@ -1240,19 +1239,17 @@ printerHomeDeliveryBill(generator, companyInfo, qrImage, data) async {
   generator.disconnect();
 }
 
-
-
 openCashDrawer(context) async {
-    final printerControllers =
+  final printerControllers =
       Provider.of<PrinterIpAddressController>(context, listen: false);
 
   const PaperSize paper = PaperSize.mm80;
   final profile = await CapabilityProfile.load();
-   final generator = NetworkPrinter(paper, profile);
+  final generator = NetworkPrinter(paper, profile);
   final PosPrintResult res = await generator.connect(
       printerControllers.printerIpAddress!,
       port: printerControllers.printerPort!);
-  
+
   generator.disconnect();
 }
 

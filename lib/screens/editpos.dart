@@ -332,7 +332,7 @@ class _EditPosScreenState extends State<EditPosScreen> {
   void initState() {
     fetchProducts();
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchOrder(widget.data['id'], widget.orderId);
     });
   }

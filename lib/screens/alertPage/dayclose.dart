@@ -18,7 +18,7 @@ class DayClosePage extends StatefulWidget {
 }
 
 class _DayClosePageState extends State<DayClosePage> {
-void  dayClose() async {
+  void dayClose() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final cashFlow = Provider.of<AmountFlow>(context, listen: false);
 
@@ -34,17 +34,22 @@ void  dayClose() async {
         Uri.parse("$baseUrl/api/daySettings/closeDay/$userId");
     var dayCloseUrl = Uri.parse("$baseUrl/api/daySettings/finalCloseDay");
     var response = await http.post(dayCloseReportUrl, headers: header);
-
+    print('dayCloseReportUrl');
+    print(response.statusCode);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)['data'];
       Fluttertoast.showToast(
           msg: 'Requesting the Printer', toastLength: Toast.LENGTH_LONG);
-      var check = await printDayClosing(data, context);
+      bool check = await printDayClosing(data, context);
+      print(check);
       if (check) {
         Fluttertoast.showToast(
             msg: 'Printing the bill', toastLength: Toast.LENGTH_LONG);
         var responses = await http.post(dayCloseUrl,
             headers: header, body: jsonEncode(bodys));
+        print('final dayClose');
+        print(responses.statusCode);
+
         if (responses.statusCode == 200) {
           Fluttertoast.showToast(
               msg: 'Successfully Day Close', toastLength: Toast.LENGTH_LONG);
@@ -73,9 +78,9 @@ void  dayClose() async {
     }
   }
 
- void  confirmDayCloseDay() async {
+  void confirmDayCloseDay() async {
+    final cashFlow = Provider.of<AmountFlow>(context, listen: false);
     try {
-      final cashFlow = Provider.of<AmountFlow>(context, listen: false);
       cashFlow.isLoading = true;
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -98,7 +103,7 @@ void  dayClose() async {
         "five": cashFlow.fiveAmount / 5,
         "two": cashFlow.twoAmount / 2,
         "one": cashFlow.oneAmount,
-        "esewa_amount":cashFlow.esewaAmount,
+        "esewa_amount": cashFlow.esewaAmount,
         "ic_amount": cashFlow.icAmount,
         "fonepay_amount": cashFlow.fonepayAmount,
         "card_amount": cashFlow.cardAmount,
@@ -109,6 +114,8 @@ void  dayClose() async {
       if (isAvailablePrint) {
         var response = await http.post(cashCountUrl,
             body: jsonEncode(body), headers: header);
+        print('cashOUT');
+        print(response.statusCode);
         if (response.statusCode == 200) {
           dayClose();
         } else {
@@ -122,6 +129,7 @@ void  dayClose() async {
       cashFlow.isLoading = false;
     } catch (error) {
       showMessage('No');
+      cashFlow.isLoading = false;
     }
   }
 
@@ -152,23 +160,25 @@ void  dayClose() async {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                    const Text(''),
-                    const Text(
-                      'Are You Sure,you want to close the Day?',
-                      style: TextStyle(fontSize: 18.0, color: Colors.redAccent),
-                    ),
-                    Consumer<AmountFlow>(builder: (context, amountFlow, child) {
-                      return IconButton(
-                          onPressed: () {
-                            if (!amountFlow.isLoading) {
-                              Navigator.pop(context);
-                            }
-                          },
-                          icon: const Icon(Icons.close));
-                    })
-                  ]),
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(''),
+                        const Text(
+                          'Are You Sure,you want to close the Day?',
+                          style: TextStyle(
+                              fontSize: 18.0, color: Colors.redAccent),
+                        ),
+                        Consumer<AmountFlow>(
+                            builder: (context, amountFlow, child) {
+                          return IconButton(
+                              onPressed: () {
+                                if (!amountFlow.isLoading) {
+                                  Navigator.pop(context);
+                                }
+                              },
+                              icon: const Icon(Icons.close));
+                        })
+                      ]),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -1015,8 +1025,6 @@ void  dayClose() async {
                               ],
                             ),
                           ),
-                         
-                         
                           Padding(
                             padding:
                                 const EdgeInsets.only(top: 8.0, bottom: 8.0),
@@ -1121,17 +1129,11 @@ void  dayClose() async {
                                     //             border: InputBorder.none)),
                                     //   ),
                                     // ),
-                                  
-                                  
                                   ],
                                 ))
                               ],
                             ),
                           ),
-                         
-                         
-                         
-                         
                           const Divider(
                             thickness: 1,
                           ),

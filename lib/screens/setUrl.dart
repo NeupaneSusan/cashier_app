@@ -30,7 +30,7 @@ class _SetUrlPageState extends State<SetUrlPage> {
 
   getUrl() async {
     var url = Uri.parse(
-        'https://server-restroms.nctbutwal.com/api/v1/restaurant/verify/pan-vat-no');
+        'https://server-restroms.nctbutwal.com.np/api/v1/restaurant/verify/pan-vat-no');
     var panVatNo = _fieldOne.text +
         _fieldTwo.text +
         _fieldThree.text +
@@ -48,6 +48,8 @@ class _SetUrlPageState extends State<SetUrlPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var response = await http.post(url, body: body, headers: header);
       if (response.statusCode == 200) {
+        print(response.statusCode);
+        print(response.body);
         var data = jsonDecode(response.body)['data'];
         prefs.setString('baseUrl', data[0]['base_url']);
         prefs.setString('restaurentName', data[0]['restaurant_name']);

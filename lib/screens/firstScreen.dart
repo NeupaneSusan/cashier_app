@@ -39,7 +39,8 @@ class _FirstScreenState extends State<FirstScreen> {
       printIpAddress.setLoading(true);
       var printerUrl = Uri.parse("$baseUrl/api/counters/printer/$userId");
       var response = await http.get(printerUrl);
-
+      print(response.statusCode);
+      print(userId);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['data'];
         final image = (data['qrcodes']['fonepay']) ?? '';

@@ -270,7 +270,7 @@ class _PosPageState extends State<PosPage> {
     // fetchCategories();
     fetchTables();
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final cartController =
           Provider.of<CartController>(context, listen: false);
       cartController.clear();
